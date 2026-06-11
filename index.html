@@ -1706,15 +1706,15 @@ function applyRoleLogic() {
 
 function renderMaster(list) {
     const body = document.getElementById('masterBody');
-    body.innerHTML = '';
 
     if (!list || list.length === 0) {
         body.innerHTML = `<tr><td colspan="7" align="center" style="padding:20px; color:#94a3b8; font-style:italic;">Data barang tidak ditemukan.</td></tr>`;
         return;
     }
 
+    let htmlRows = ''; // Tampung semua baris di variabel string agar ringan
     list.forEach(m => {
-        body.innerHTML += `<tr>
+        htmlRows += `<tr>
             <td><div class="ui-box-badge ui-box-wrap kode-barang-flex" style="color:#0f172a; border-color:#94a3b8;">${m.kode || '-'}</div></td>
             <td><div class="ui-box-badge">${m.kat || '-'}</div></td>
             <td><div class="ui-box-badge">${m.motif || '-'}</div></td>
@@ -1724,6 +1724,7 @@ function renderMaster(list) {
             <td align="center"><div class="ui-box-badge" style="color:#64748b;">${m.badan || '0'}</div></td>
         </tr>`;
     });
+    body.innerHTML = htmlRows; // Render sekaligus ke DOM
 }
 
 function filterMaster() {
@@ -1739,7 +1740,7 @@ function filterMaster() {
     const filtered = DATA.master.filter(m => {
         const textToSearch = `${m.kode || ''} ${m.kat || ''} ${m.motif || ''}`.toLowerCase();
         return textToSearch.includes(v);
-    });
+    }).slice(0, 150); // Batasi maksimal 150 data yang dirender saat mengetik agar tidak lag
 
     renderMaster(filtered);
 }
